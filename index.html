@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Video</title>
+  <title>Video Player</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -11,41 +11,39 @@
   <div class="stage">
 
     <button class="play-button" id="startBtn">Play</button>
-    <!-- Intro 1 -->
-    <video id="intro1" class="active" autoplay muted playsinline preload="auto">
+
+    <video id="intro1" class="video-item" muted playsinline preload="auto">
       <source src="video/thrid.mp4" type="video/mp4">
     </video>
-
-    <!-- Intro 2 -->
-    <video id="intro2" playsinline muted preload="auto">
+      
+    <video id="intro2" class="video-item" muted playsinline preload="auto">
       <source src="video/second.mp4" type="video/mp4">
     </video>
 
-    <!-- 10 main videos -->
-    <video id="v1" playsinline preload="auto"><source src="video/second.mp4" type="video/mp4"></video>
-    <video id="v2" playsinline preload="auto"><source src="video/first.mp4" type="video/mp4"></video>
-    <video id="v3" playsinline preload="auto"><source src="video/video3.mp4" type="video/mp4"></video>
-    <video id="v4" playsinline preload="auto"><source src="video/video4.mp4" type="video/mp4"></video>
-    <video id="v5" playsinline preload="auto"><source src="video/video5.mp4" type="video/mp4"></video>
-    <video id="v6" playsinline preload="auto"><source src="video/video6.mp4" type="video/mp4"></video>
-    <video id="v7" playsinline preload="auto"><source src="video/video7.mp4" type="video/mp4"></video>
-    <video id="v8" playsinline preload="auto"><source src="video/video8.mp4" type="video/mp4"></video>
-    <video id="v9" playsinline preload="auto"><source src="video/video9.mp4" type="video/mp4"></video>
-    <video id="v10" playsinline preload="auto"><source src="video/video10.mp4" type="video/mp4"></video>
+    <video id="v1" class="video-item" muted playsinline preload="auto"><source src="video/second.mp4" type="video/mp4"></video>
+    <video id="v2" class="video-item" muted playsinline preload="auto"><source src="video/first.mp4" type="video/mp4"></video>
+    <video id="v3" class="video-item" muted playsinline preload="auto"><source src="video/video3.mp4" type="video/mp4"></video>
+    <video id="v4" class="video-item" muted playsinline preload="auto"><source src="video/video4.mp4" type="video/mp4"></video>
+    <video id="v5" class="video-item" muted playsinline preload="auto"><source src="video/video5.mp4" type="video/mp4"></video>
+    <video id="v6" class="video-item" muted playsinline preload="auto"><source src="video/video6.mp4" type="video/mp4"></video>
+    <video id="v7" class="video-item" muted playsinline preload="auto"><source src="video/video7.mp4" type="video/mp4"></video>
+    <video id="v8" class="video-item" muted playsinline preload="auto"><source src="video/video8.mp4" type="video/mp4"></video>
+    <video id="v9" class="video-item" muted playsinline preload="auto"><source src="video/video9.mp4" type="video/mp4"></video>
+    <video id="v10" class="video-item" muted playsinline preload="auto"><source src="video/video10.mp4" type="video/mp4"></video>
 
-    <!-- Buttons (hidden at first) -->
     <div class="controls" id="controls">
-      <img src="Buttons/BadBreath.png" alt="Video 1" data-target="v1">
-      <img src="Buttons/BleedingGums.png" alt="Video 2" data-target="v2">
-      <img src="Buttons/Cavity.png" alt="Video 3" data-target="v3">
-      <img src="Buttons/EnamelAbrasion.png" alt="Video 4" data-target="v4">
-      <img src="Buttons/Germs.png" alt="Video 5" data-target="v5">
-      <img src="Buttons/Plaque.png" alt="Video 6" data-target="v6">
-      <img src="Buttons/Sensitivity.png" alt="Video 7" data-target="v7">
-      <img src="Buttons/TeethYellowing.png" alt="Video 8" data-target="v8">
-      <img src="Buttons/Toothache.png" alt="Video 9" data-target="v9">
-      <img src="Buttons/ToothDecay.png" alt="Video 10" data-target="v10">
+      <img src="Buttons/Cavity.png" alt="Video 1" data-target="v1">
+      <img src="Buttons/Toothache.png" alt="Video 2" data-target="v2">
+      <img src="Buttons/Sensitivity.png" alt="Video 3" data-target="v3">
+      <img src="Buttons/BleedingGums.png" alt="Video 4" data-target="v4">
+      <img src="Buttons/BadBreath.png" alt="Video 5" data-target="v5">
+      <img src="Buttons/TeethYellowing.png" alt="Video 6" data-target="v6">
+      <img src="Buttons/ToothDecay.png" alt="Video 7" data-target="v7">
+      <img src="Buttons/Plaque.png" alt="Video 8" data-target="v8">
+      <img src="Buttons/Germs.png" alt="Video 9" data-target="v9">
+      <img src="Buttons/EnamelAbrasion.png" alt="Video 10" data-target="v10">
     </div>
+
   </div>
 
   <script src="script.js"></script>

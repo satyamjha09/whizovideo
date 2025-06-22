@@ -1,4 +1,4 @@
-    /* Reset and Layout */
+/* Reset and Layout */
 * {
   margin: 0;
   padding: 0;
@@ -8,77 +8,81 @@
 html, body {
   height: 100%;
   background: #000;
+  display: flex; /* Use flexbox to center content */
+  justify-content: center;
+  align-items: center;
 }
 
 /* Video Stage */
 .stage {
   position: relative;
   width: 100%;
-  height: 100%;
+  max-width: 100vh; /* Max width based on viewport height for 16:9 */
+  height: 100vh; /* Max height based on viewport height */
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* For 16:9 aspect ratio */
+  aspect-ratio: 9 / 16; /* Set aspect ratio for the stage */
+  background-color: black; /* Ensure black background if video doesn't cover */
 }
+
 
 .play-button {
-      position: absolute;
-      top: 90%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 14px 44px;
-      font-size: 18px;
-      background: white;
-      color: black;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      z-index: 20;
-    }
-
-.stage video {
   position: absolute;
-  inset: 0;
+  bottom: 5%; /* Adjusted position to be at the bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 44px;
+  font-size: 18px;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.stage .video-item {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  /* height: 100%; */
-  object-fit: cover;
+  height: 100%;
+  object-fit: cover; /* Cover the entire stage */
   opacity: 0;
   pointer-events: none;
-  /* transition: opacity 0.35s ease; */
+  transition: opacity 0.35s ease; /* Smooth transition for video visibility */
 }
 
-
-
-.stage video.active {
+.stage .video-item.active {
   opacity: 1;
-  pointer-events: auto; /* ✅ make active video clickable/playable */
+  pointer-events: auto;
 }
-
-
-
-.controls.show {
-  display: grid !important; /* ✅ class to show the grid after intros */
-}
-
 
 /* ===== Grid Button Style at Top ===== */
 .controls {
-   display: none;
+  display: none; /* Initially hidden */
   position: absolute;
   top: 10px;
   left: 50%;
-   display: grid;
-  grid-template-rows: repeat(5, 1fr); /* 5 equal-width columns */
-  grid-template-columns: repeat(2, auto);   /* 2 rows (height based on content) */
-  gap: 10px; /* Optional spacing between grid items */
   transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile, 5 rows */
+  grid-auto-rows: minmax(auto, 1fr); /* Rows adjust to content */
+  gap: 10px;
   padding: 10px;
   width: 90%;
-  /* max-width: 95%; */
-  /* background-color: rgba(0, 0, 0, 0.3); */
+  max-width: 300px; /* Max width for buttons on mobile to prevent stretching too wide */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for controls */
   border-radius: 12px;
   z-index: 10;
 }
 
 .controls img {
   width: 100%;
+  height: auto; /* Maintain aspect ratio */
   border-radius: 15px;
   object-fit: cover;
   border: 2px solid white;
@@ -93,70 +97,31 @@ html, body {
 /* Optional media query to keep clean rows on larger screens */
 @media (min-width: 500px) {
   .controls {
-    grid-template-columns: repeat(5, 44px);
+    grid-template-columns: repeat(5, 1fr); /* 5 columns for wider screens */
+    max-width: 500px; /* Adjust max-width for larger screens */
+  }
+  .stage {
+      max-width: 56.25vh; /* For desktop viewing of 16:9 content (16/9 * vh) */
+      height: 100vh;
   }
 }
 
-
-/* 
-.play-button {
-      position: absolute;
-      top: 90%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 14px 44px;
-      font-size: 18px;
-      background: white;
-      color: black;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      z-index: 20;
+/* Landscape orientation for mobile devices */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    .stage {
+        width: 100vw;
+        height: 100%;
+        max-width: none;
+        aspect-ratio: 16 / 9; /* Landscape aspect ratio */
     }
-
-.stage video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  /* height: 100%; */
-  /* object-fit: cover;
-  opacity: 0;
-  pointer-events: none; */
-  /* transition: opacity 0.35s ease; */
-/* }
-
-.stage video.active {
-  opacity: 1;
+    .controls {
+        grid-template-columns: repeat(5, 1fr); /* More columns for landscape */
+        max-width: 80%; /* Adjust max width for landscape */
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .play-button {
+        bottom: unset;
+        top: 90%;
+    }
 }
-
-/* ===== Grid Button Style at Top ===== */
-
-     /* .controls {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
-      gap: 10px;
-      padding: 10px;
-      max-width: 95%;
-      background-color: rgba(0, 0, 0, 0.3);
-      border-radius: 12px;
-      z-index: 10;
-      display: none;
-    } */
-
-    /* .controls img {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid white;
-      cursor: pointer;
-      transition: transform 0.2s;
-    } */
-
-    /* .controls img:hover {
-      transform: scale(1.08);
-    /* }  */ 
