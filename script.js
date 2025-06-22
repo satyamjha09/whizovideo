@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  
     const intro1 = document.getElementById('intro1');
     const intro2 = document.getElementById('intro2');
     const controlPanel = document.getElementById('controls');
@@ -8,14 +7,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const startButton = document.getElementById('startBtn'); // Corrected ID
 
     // --- Initial Setup ---
-    // Hide all videos and controls initially
+    // Hide all videos except intro1
     allVideos.forEach(v => {
         v.classList.remove('active');
         v.pause();
         v.currentTime = 0;
     });
+
+    // Make intro1 active and paused from the start
+    intro1.classList.add('active');
+    intro1.muted = true; // Ensure intro1 is muted initially
+    intro1.pause(); // Ensure intro1 is paused
+    intro1.currentTime = 0; // Start intro1 from the beginning
+
+    // Hide control panel initially
     controlPanel.style.display = 'none';
-    startButton.style.display = 'block'; // Ensure start button is visible
+    
+    // Ensure start button is visible
+    startButton.style.display = 'block'; 
 
     // --- Event Listeners ---
 
@@ -24,32 +33,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hide the start button
         startButton.style.display = 'none';
 
-        // Ensure all videos are reset and inactive
+        // Ensure all other videos are reset and inactive (intro1 is already active)
         allVideos.forEach(v => {
-            v.classList.remove('active');
-            v.pause();
-            v.currentTime = 0;
+            if (v.id !== 'intro1') { // Don't touch intro1's active state here
+                v.classList.remove('active');
+                v.pause();
+                v.currentTime = 0;
+            }
         });
 
-        // Activate and play intro1
-        intro1.classList.add('active');
-        intro1.muted = false; // Unmute intro1
+        // Play intro1 (it's already active)
+        intro1.muted = false; // Unmute intro1 when playing
         intro1.play().catch(error => {
             console.error("Error playing intro1:", error);
             // Fallback for autoplay restrictions: if play fails, immediately go to intro2 or buttons
-            // This is a basic fallback, more robust error handling might be needed
             playIntro2(); 
         });
     });
 
     // 2. When intro1 ends: Play intro2
     intro1.addEventListener('ended', () => {
-        intro1.classList.remove('active');
+        intro1.classList.remove('active'); // Deactivate intro1
         playIntro2();
     });
 
     function playIntro2() {
-        intro2.classList.add('active');
+        intro2.classList.add('active'); // Activate intro2
         intro2.muted = false; // Unmute intro2
         intro2.play().catch(error => {
             console.error("Error playing intro2:", error);
@@ -60,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. When intro2 ends: Show control buttons
     intro2.addEventListener('ended', () => {
-        intro2.classList.remove('active');
+        intro2.classList.remove('active'); // Deactivate intro2
         showControlButtons();
     });
 
@@ -81,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 v.pause();
                 v.currentTime = 0;
                 v.classList.remove('active');
-                v.muted = true; // Mute main videos initially
+                v.muted = true; // Mute main videos initially before playing
             });
 
             // Activate and play the selected video
