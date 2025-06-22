@@ -1,24 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const intro1 = document.getElementById('intro1');
-    const intro2 = document.getElementById('intro2');
+    const introVideo = document.getElementById('intro1'); // Now refers to the single intro video
     const controlPanel = document.getElementById('controls');
     const allVideos = document.querySelectorAll('.video-item'); // Select all videos with the common class
     const buttons = document.querySelectorAll('.controls img');
-    const startButton = document.getElementById('startBtn'); // Corrected ID
+    const startButton = document.getElementById('startBtn');
 
     // --- Initial Setup ---
-    // Hide all videos except intro1
+    // Hide all videos except the intro video, and ensure they are reset
     allVideos.forEach(v => {
-        v.classList.remove('active');
-        v.pause();
-        v.currentTime = 0;
+        if (v.id !== 'intro1') {
+            v.classList.remove('active');
+            v.pause();
+            v.currentTime = 0;
+        }
     });
 
-    // Make intro1 active and paused from the start
-    intro1.classList.add('active');
-    intro1.muted = true; // Ensure intro1 is muted initially
-    intro1.pause(); // Ensure intro1 is paused
-    intro1.currentTime = 0; // Start intro1 from the beginning
+    // Make the intro video active and paused from the start
+    introVideo.classList.add('active');
+    introVideo.muted = true; // Ensure intro is muted initially
+    introVideo.pause(); // Ensure intro is paused
+    introVideo.currentTime = 0; // Start intro from the beginning
 
     // Hide control panel initially
     controlPanel.style.display = 'none';
@@ -28,88 +29,86 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Event Listeners ---
 
-    // 1. Click on Start Button: Play intro1
+    // 1. Click on Start Button: Play the single intro video
     startButton.addEventListener('click', () => {
-        // Hide the start button
         startButton.style.display = 'none';
 
-        // Ensure all other videos are reset and inactive (intro1 is already active)
+        // Ensure only the intro video is active before playing it
         allVideos.forEach(v => {
-            if (v.id !== 'intro1') { // Don't touch intro1's active state here
+            if (v.id !== 'intro1') {
                 v.classList.remove('active');
                 v.pause();
                 v.currentTime = 0;
             }
         });
 
-        // Play intro1 (it's already active)
-        intro1.muted = false; // Unmute intro1 when playing
-        intro1.play().catch(error => {
-            console.error("Error playing intro1:", error);
-            // Fallback for autoplay restrictions: if play fails, immediately go to intro2 or buttons
-            playIntro2(); 
+        introVideo.muted = false; // Unmute intro video when playing
+        introVideo.play().catch(error => {
+            console.error("Error playing intro video:", error);
+            // Fallback for autoplay restrictions: if play fails, immediately show buttons
+            showControlButtons(); 
         });
     });
 
-    // 2. When intro1 ends: Play intro2
-    intro1.addEventListener('ended', () => {
-        intro1.classList.remove('active'); // Deactivate intro1
-        playIntro2();
-    });
-
-    function playIntro2() {
-        intro2.classList.add('active'); // Activate intro2
-        intro2.muted = false; // Unmute intro2
-        intro2.play().catch(error => {
-            console.error("Error playing intro2:", error);
-            // Fallback: if play fails, immediately show buttons
-            showControlButtons();
-        });
-    }
-
-    // 3. When intro2 ends: Show control buttons
-    intro2.addEventListener('ended', () => {
-        intro2.classList.remove('active'); // Deactivate intro2
-        showControlButtons();
+    // 2. When the intro video ends: Show control buttons, keeping intro video visible
+    introVideo.addEventListener('ended', () => {
+        // We DO NOT remove 'active' from introVideo, so it stays visible
+        introVideo.pause(); // Ensure intro video is paused on its last frame
+        showControlButtons(); // Show control buttons immediately
     });
 
     function showControlButtons() {
-        controlPanel.style.display = 'grid'; // Show the grid of buttons
+        controlPanel.style.display = 'grid';
     }
 
-    // 4. Button click: Play selected main video
+    // 3. Button click: Play selected main video
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
             const videoId = btn.dataset.target;
 
-            // Hide the control panel when a video is selected
-            controlPanel.style.display = 'none';
-
-            // Pause and reset all videos
+            // Pause and reset all videos, except the intro video which should remain active
             allVideos.forEach(v => {
-                v.pause();
-                v.currentTime = 0;
-                v.classList.remove('active');
-                v.muted = true; // Mute main videos initially before playing
+                if (v.id !== 'intro1' && v.id !== videoId) { // Do not reset intro or the target video
+                    v.pause();
+                    v.currentTime = 0;
+                    v.classList.remove('active');
+                    v.muted = true;
+                }
             });
+            
+            // If the intro video was active, ensure it's muted and paused but remains visible
+            if (introVideo.classList.contains('active')) {
+                introVideo.muted = true;
+                introVideo.pause();
+            }
+
+            // Hide the control panel immediately
+            controlPanel.style.display = 'none';
 
             // Activate and play the selected video
             const targetVideo = document.getElementById(videoId);
             if (targetVideo) {
-                targetVideo.classList.add('active');
+                targetVideo.classList.add('active'); // Will fade in
                 targetVideo.loop = false; // Main videos should not loop unless specified
                 targetVideo.muted = false; // Unmute selected main video
                 targetVideo.play().catch(error => {
                     console.error(`Error playing ${videoId}:`, error);
-                    // If playing fails, show controls again (or an error message)
+                    // If playing fails, show controls again immediately
                     showControlButtons(); 
                 });
 
                 // When a main video ends, show the control buttons again
                 targetVideo.addEventListener('ended', () => {
-                    targetVideo.classList.remove('active');
-                    showControlButtons();
-                }, { once: true }); // Use { once: true } so the event listener is removed after it fires once
+                    targetVideo.classList.remove('active'); // Immediately fade out the main video
+                    
+                    // After main video fades out, ensure the intro video is the background again
+                    if (!introVideo.classList.contains('active')) {
+                        introVideo.classList.add('active'); // Make sure introVideo is active again
+                        introVideo.muted = true; // Keep it muted
+                        introVideo.pause(); // Keep it paused
+                    }
+                    showControlButtons(); // Show controls immediately
+                }, { once: true });
             }
         });
     });
